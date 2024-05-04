@@ -32,6 +32,10 @@ class _HomeState extends State<Home> {
           Navigator.push(context, MaterialPageRoute(builder: (context) => const CartPage()));
         } else if (state is HomeNavigateToWishListPageActionState) {
           Navigator.push(context, MaterialPageRoute(builder: (context) => const WishList()));
+        } else if (state is HomeProductItemCartedActionState) {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Product added to Cart')));
+        }else if (state is HomeProductItemWishlistedActionState) {
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Product added to Wishlist')));
         }
       },
       builder: (context, state) {
@@ -42,7 +46,7 @@ class _HomeState extends State<Home> {
                 child: CircularProgressIndicator(),
               ),
             );
-          case HomeLoadedSuccessState :
+          case HomeLoadedSuccessState:
             final successState = state as HomeLoadedSuccessState;
             return Scaffold(
               appBar: AppBar(
@@ -66,11 +70,11 @@ class _HomeState extends State<Home> {
               body: ListView.builder(
                   itemCount: successState.products.length,
                   itemBuilder: (context, index) {
-                    return ProductTileWidget(productDataModel: successState.products[index]);
+                    return ProductTileWidget(homeBloc: homeBloc, productDataModel: successState.products[index]);
                   }),
             );
 
-          case HomeErrorState :
+          case HomeErrorState:
             return const Scaffold(
               body: Center(
                 child: Text("Something Went Wrong"),
